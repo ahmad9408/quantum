@@ -470,12 +470,4 @@ $j = ($page * $jmlHal);
   </tr>
 </table>
 
-
-
-<!-- percobaan di edit 2-->
-
-<!-- percobaan di edit github-->
-
-<!-- percobaan di edit github ke-->
-
 <?php include_once "footer.php" ?>
