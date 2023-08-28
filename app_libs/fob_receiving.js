@@ -245,5 +245,5 @@ activateAutoComplete($('#pabrik'));
 function activateAutoComplete(component){
 component.chosen({});	
 
-
+//tes
 }	
