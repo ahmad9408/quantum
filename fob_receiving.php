@@ -474,4 +474,6 @@ $j = ($page * $jmlHal);
 
 <!-- percobaan di edit 2-->
 
+<!-- percobaan di edit github-->
+
 <?php include_once "footer.php" ?>
