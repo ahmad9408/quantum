@@ -470,4 +470,5 @@ $j = ($page * $jmlHal);
   </tr>
 </table>
 
+<!-- percobaan -->
 <?php include_once "footer.php" ?>
