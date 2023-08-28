@@ -345,6 +345,7 @@ $array_norek = array(
 
 
 
+
 <?php  //mysql_close(); 
 ?>
 <?php include_once "footer.php"; ?>
