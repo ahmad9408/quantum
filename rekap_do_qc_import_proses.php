@@ -1,0 +1,189 @@
+<?php
+ob_start();
+session_start();
+@$username=$_SESSION["username"];
+if(empty($username)){
+ die('You can\'t see this page');
+}
+
+ // menggunakan class phpExcelReader
+include "excel_reader2.php";
+
+// koneksi ke mysql
+include"connect.php";
+
+// nilai awal counter untuk jumlah data yang sukses dan yang gagal diimport
+$sukses = 0;
+$gagal = 0;
+$datetime=date('Y-m-d h:i:s');
+$id_jurnal=$_POST['nomor'];
+$bank=$_POST['temp_bank'];
+$jenis=$_POST['temp_jenis'];
+$id_import=date('Ymdhis');
+$pabrik=$_POST['pabrik'];
+$tanggal_do=$_POST['tanggal_do'];
+
+// $pabrik="P0001";
+// $tanggal_do="2022-01-01";
+
+$tgl=explode("-",$tanggal_do);
+$thn=$tgl[0];
+$bln=$tgl[1];
+$subtgl=$tgl[2];
+
+
+$time=date('his');
+
+
+// function no_do($tanggal_do,$pabrik){
+
+       $char1="DO_FINISH";
+       $char2=$pabrik;
+       //membuat doc no otomatis
+       $c = "SELECT max(no_do) as maxKode FROM  do_produk_qc WHERE tanggal LIKE '$tanggal_do%' AND substring(no_do,1,15)='$char1/$char2' ";
+       $qc = mysql_query($c) or die ($c);
+
+       //echo $c; //die ();
+       
+       list($hasil_cari)=mysql_fetch_array($qc);
+
+         // echo "hasil cari =".$hasil_cari."<br><br>"; 
+         $kode=substr($hasil_cari,28,4);
+         // $kode=intval($kode);
+         $tambah=$kode+1;
+
+
+         //echo $hasil_cari." -".$kode."-".$tambah;
+         if($tambah<10){
+          $sub_id="00".$tambah;
+         } else if (($tambah>=10) && ($tambah<100)){
+          $sub_id="0".$tambah;
+         } else if ($tambah>=1000){
+             $sub_id=$tambah;
+         } 
+
+       //echo $hasil_cari."-".$kode."-".$tambah."-".$sub_id."<br>";
+
+       //membuat format tahun co:/  19 dari 2019
+       $subthn=substr($thn, 2,2);
+
+       
+       //echo $sub_id;
+       //return 
+      $docno =$char1."/".$char2."/".$thn."/".$bln."/".$subtgl."/".$sub_id;
+// }
+
+      $no_do=$docno; 
+
+
+
+if (!empty($_FILES['userfile']['name'])) // jika nama file tidak kosong
+{
+    $extensionList = array("xls"); //ini list tipe file yang akan kita perbolehkan untuk di unggah
+    $fileName = $_FILES['userfile']['name']; // pengambilan nama file dari form
+    $pecah = explode(".", $fileName); // proses pemecahan nama file untuk pengambilan extension file
+    $belah = count($pecah);
+    $ekstensi = strtolower($pecah[$belah-1]); //pengambilan extension file sekaligus strtolower untuk merubah string menjadi huruf kecil semua
+    // proses untuk pengecekan file extensi, in_array maksudnya apabila data string ada di dalam array maka ...
+    if (in_array($ekstensi, $extensionList))
+    {
+     unset($_SESSION['id_import']);
+     $_SESSION['id_import']=$id_import;  
+	  // membaca file excel yang diupload
+     $data = new Spreadsheet_Excel_Reader($_FILES['userfile']['tmp_name']);
+     //echo $data."--<br>";
+     // membaca jumlah baris dari data excel
+     $baris = $data->rowcount($sheet_index=0);
+     //echo $baris."--<br>";
+     //echo"baris = $baris";
+
+     // import data excel mulai baris ke-2 (karena baris pertama adalah nama kolom)
+           $sql="SET autocommit = 0;";
+        $query=mysql_query($sql);
+
+        $sql="START TRANSACTION;";
+        $query=mysql_query($sql);
+     for ($i=2; $i<=$baris; $i++)
+     {
+	   
+     $no=$i-1;
+       //echo $i;
+       // membaca data dari mulai baris kedua
+       $itemcode = $data->val($i, 1);
+       $itemcode = str_replace("'","",$itemcode);
+
+       $itemname    = $data->val($i, 2);
+
+       $variantcode    = $data->val($i, 3);
+       $variantcode    = str_replace("'","",$variantcode);
+
+       $barcode=$itemcode.$variantcode;
+       
+       $unitprice   = $data->val($i, 4);
+       $unitprice   = str_replace(',','',$unitprice);
+
+       $qty = $data->val($i, 5);
+       $disc = $data->val($i, 6);
+       $subtotal = $data->val($i, 7);
+       $subtotal =  str_replace(',','',$subtotal);
+
+       $polybag = $data->val($i, 8);
+
+       $co_mapping = $data->val($i, 9);
+       
+       //menghapus semua format number bawaan excel
+    
+       // echo"<br><br>".$docno;
+       
+	     // setelah data dibaca, sisipkan ke dalam tabel
+ 
+       
+       $query = "INSERT INTO do_produk_qc_detail (no_do,tanggal,barcode,harga_jual,qty,disc,subtotal,
+                 polybag,seq,`status`,`co_mapping`)
+                 VALUES ('$no_do','$tanggal_do','$barcode','$unitprice','$qty','$disc',' $subtotal','$polybag','$no','1','$co_mapping')";
+       $hasil = mysql_query($query) or die ($query);
+      
+       echo $query."<br>";
+      if ($hasil) {
+         echo"<br>$query-data sukses diimport";
+      } else {
+         echo"<br>$query-data gagal diimport-$query";
+      }
+   
+      $total_qty+=$qty;
+      $total_subtotal+=$subtotal;
+   }
+
+   $in="INSERT INTO do_produk_qc(no_do,id_pabrik,tanggal,total_qty,total_amount,approve1,approve1_by,approve1_date,
+                   approve2,approve2_by,approve2_date,update_date,update_user,`status`)
+        VALUES ('$no_do','$pabrik','$tanggal_do','$total_qty','$total_subtotal','1','$username',NOW(),
+                '','','',now(),'$username','1')";
+   $qin = mysql_query($in) or die ($in);    
+   
+   $c="COMMIT;";  
+$qc=mysql_query($c);
+   echo $in."<br>";         
+   //die();
+   // tampilan status sukses dan gagal
+   if($qin){
+      echo "<h3>Proses import data selesai.</h3>";
+   // echo $query."<br>";
+      header('location:rekap_do_qc.php?action=search');  
+   } else {
+      echo $qin;
+   }
+   
+		
+} else
+  {
+   echo "<script>";
+   echo "alert('Salah Format File, harus .xls');";
+   echo "document.location=\"rekap_do_qc.php?action=search\";";
+   echo "</script>";
+  }
+
+}// end main IF
+
+
+
+?>
