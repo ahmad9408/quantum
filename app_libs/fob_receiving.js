@@ -132,9 +132,6 @@ function get_data_barcode(no){
 
 }
 
-
-
-
   function simpan(){
   // alert('Klik simpan cukup sekali.. Mohon tunggu sebentar');
    var supplier = $("#supplier").val();
