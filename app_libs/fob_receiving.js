@@ -243,5 +243,7 @@ activateAutoComplete($('#pabrik'));
 // }
 
 function activateAutoComplete(component){
-component.chosen({});		
+component.chosen({});	
+
+
 }	
