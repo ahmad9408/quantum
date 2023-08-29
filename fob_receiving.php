@@ -49,7 +49,7 @@ if (isset($_GET['hal'])) $hal = $_GET['hal'];
 else $hal = 0;
 
 if (empty($data_tampil)) {
-  $data_tampil = 20;
+  $data_tampil = 100;
 }
 $jmlHal = $data_tampil;
 $page = $hal;
