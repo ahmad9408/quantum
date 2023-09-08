@@ -36,7 +36,7 @@ if (isset($_REQUEST['hal'])) {
   $_SESSION['tgl2'] = $tgl2;
 } else {
 
-  $data_tampil = 20;
+  $data_tampil = 100;
 }
 
 if (empty($tgl1)) {
