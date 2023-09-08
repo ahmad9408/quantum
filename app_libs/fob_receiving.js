@@ -233,7 +233,7 @@ function activateAutoCompleteAll(){
 
 activateAutoComplete($('#pabrik'));		
 
-}
+} v
 
 // function deactivateAutoComplete(component){
 //    component.chosen("destroy");	
@@ -241,5 +241,6 @@ activateAutoComplete($('#pabrik'));
 
 function activateAutoComplete(component){
 component.chosen({});	
+
 
 }	
