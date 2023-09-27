@@ -122,8 +122,8 @@ include_once "clsaddrow.php";
         </tr>
         <tr>
           <td style="width:100px;">No Faktur Pajak</td>
-          <td colspan="2">
-            <input type="text" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10" class="form-control" readonly />
+          <td colspan="2" type="text" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10"  readonly onDblClick="tampil_edit('<?php echo $faktur ?>')">&nbsp;&nbsp;&nbsp;<?php echo $faktur; ?>
+          <input type="hidden" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10" class="form-control" readonly />
           </td>
         </tr>             
         <tr>

@@ -78,6 +78,45 @@ function get_data_barcode(no) {
 
 }
 
+function tampil_edit(faktur) {
+
+   //    $("#tsubtotal_" + id_suratjalan).html("<input type=text id='subtotal_" + id_suratjalan + "' value='" + subtotal + "' style='width:300px' class='form-control'>");
+      $("[id='fkp']").html("<input type=text id='nfkp' value='" + faktur + "' style='font-size: 8pt;width:300px;' class='form-control'>");
+   
+   
+      $("[id='nfkp']").keydown(function (event) {
+          if (event.keyCode == 13) {
+              var fkp_baru = $("[id='nfkp']").val();
+              var invoice = $("#inv").val();
+              
+              // alert(qty_update);
+              $.ajax({
+                  url: "fob_invoice_input_data.php",
+                  type: "POST",
+                  cache: false,
+                  dataType: 'text',
+                  data: {
+                      fkp: fkp_baru,
+                      j: 'tampil_edit_fkp',
+                      inv: invoice
+   
+                  },
+                  success: function (data) {
+                      // alert(data);
+                      if (data == 'sukses') {
+                        //   $("#transaksi").load("fob_pembayaran_refresh.php");
+                          window.location = 'fob_invoice_detail_input.php?no_inv='+ invoice;
+                      } else if (data = 'Gagal Transaksi') {
+                          alert(data);
+                      }
+   
+                  } // END SUCSESS
+              }); // end ajax 
+          } // end event
+      }); // end keydown function */
+   
+   }
+
 function get_diskon(no) {
    var tot_harga = $("#tot_harga" + no).val();
    var diskon = $("#diskon" + no).val();

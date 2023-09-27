@@ -48,7 +48,7 @@ if ($jenis == 'get_barcode') {
           where id_suratjalan='$barcode'";
 
   $query = mysql_query($sql);
-  list($kode, $deskripsi, $harga, $qty, $jumlah, $sudahbayar,$tot_ppn) = mysql_fetch_array($query);
+  list($kode, $deskripsi, $harga, $qty, $jumlah, $sudahbayar, $tot_ppn) = mysql_fetch_array($query);
 
   echo $kode . ";" . $deskripsi . ";" . $harga . ";" . $qty . ";" . $jumlah  . ";" . $sudahbayar . ";" . $tot_ppn;
 
@@ -180,19 +180,20 @@ if ($jenis == 'get_barcode') {
           fob_receiving
           WHERE id_invoice='$inv'";
     $qsup2 = mysql_query($sup2) or die('error query get nama supplier');
-    list($total_qty,
-          $total_ppn,
-          $subtotal,
-          $total_harga,
-          $disc_nilai,
-          $total_harus_bayar,
-          $total_sudah, 
-          $total_sisa
+    list(
+      $total_qty,
+      $total_ppn,
+      $subtotal,
+      $total_harga,
+      $disc_nilai,
+      $total_harus_bayar,
+      $total_sudah,
+      $total_sisa
     ) = mysql_fetch_array($qsup2);
 
     $q = "SET autocommit = 0;";
     $qq = mysql_query($q);
-  
+
     $q2 = "START TRANSACTION;";
     $qq2 = mysql_query($q);
 
@@ -213,29 +214,55 @@ if ($jenis == 'get_barcode') {
   $sql5 = "SELECT total_sisa_bayar
     FROM fob_invoice
     WHERE id_invoice='$inv'";
-    $query4 = mysql_query($sql5) or die($sql5);
-    while (list($total_sisa_bayar) = mysql_fetch_array($query4)) {
+  $query4 = mysql_query($sql5) or die($sql5);
+  while (list($total_sisa_bayar) = mysql_fetch_array($query4)) {
 
-      if ($total_sisa_bayar == 0) {
+    if ($total_sisa_bayar == 0) {
 
-        $up = "UPDATE fob_invoice SET 
+      $up = "UPDATE fob_invoice SET 
         status_pembayaran=1
         where id_invoice='$inv'";
 
-        $qup = mysql_query($up) or die($up);
-      } else {
-        $up = "UPDATE fob_invoice SET 
+      $qup = mysql_query($up) or die($up);
+    } else {
+      $up = "UPDATE fob_invoice SET 
         status_pembayaran=0
         where id_invoice='$inv'";
 
-        $qup = mysql_query($up) or die($up);
-      }
+      $qup = mysql_query($up) or die($up);
     }
+  }
 
   $c = "COMMIT;";
   $qc = mysql_query($c);
 
   echo "Berhasil di Input";
+
+  die();
+} else if ($jenis == 'tampil_edit_fkp') {
+
+  $q = "SET autocommit = 0;";
+  $qq = mysql_query($q);
+
+  $q2 = "START TRANSACTION;";
+  $qq2 = mysql_query($q);
+
+  $up = "UPDATE fob_invoice SET 
+  no_faktur_pajak='$fkp'
+  where id_invoice='$inv'";
+
+  $qup = mysql_query($up) or die($up);
+
+  $up = "UPDATE fob_receiving SET 
+  faktur_pajak='$fkp'
+  where id_invoice='$inv'";
+
+  $qup = mysql_query($up) or die($up);
+
+  $c = "COMMIT;";
+  $qc = mysql_query($c);
+
+  echo "sukses";
 
   die();
 } else { //get Total Jual
