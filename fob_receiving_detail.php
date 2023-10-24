@@ -114,7 +114,8 @@ while (list(
                 <tr>
                     <td><b>CO Mapping</b></td>
                     <td><b>:</b></td>
-                    <td><?php echo $co_mapping; ?></td>
+                    <!-- <td><?php echo $co_mapping; ?></td> -->
+                    <td type="text" name="co_mapping" id="co_mapping" value="<?php echo $co_mapping; ?>" style="font-size: 8pt;width:300px;" size="10" readonly onDblClick="tampil_edit_co('<?php echo $co_mapping ?>','<?php echo $id_suratjalan ?>')"><?php echo $co_mapping; ?>
                 </tr>
                 <tr>
                     <td><b>Qty</b></td>
@@ -210,7 +211,7 @@ while (list(
                         <?php
                         if ($isShowHargaMakloon == 1) {
                             echo "<td align='right'>" . number_format($_harga, 2, '.', ',') . "</td>";
-                            $hrgjual = $hrgjual + $_harga;
+                            $hrgjual = $_harga;
                             echo "<td align='right'>" . number_format($_qty * $_harga, 2, '.', ',') . "</td>";
                             $totharga = $totharga + $_qty * $_harga;
                             echo "<td align='right'>" . number_format($_ppn, 2, '.', ',') . "</td>";
@@ -249,6 +250,7 @@ while (list(
 
             <?php
             $id_suratjalan = sanitasi($_GET["id_suratjalan"]);
+            $co_mapping = sanitasi($_GET["co_mapping"]);
             $sql = "SELECT
             id_suratjalan,
             approve_by,
@@ -296,7 +298,7 @@ while (list(
                         <td align="center" colspan="3">
                             <?php
                             if (($approve1 != '0') && ($approve2 != '1')) {
-                            ?><span class='btn btn-danger' onclick='rekap_do_qc_batal()'>Batalkan DO</span>
+                            ?><span class='btn btn-danger' onclick='rekap_do_qc_batal()'>Batalkan DO</span>&nbsp;&nbsp;<span class='btn btn-danger' onclick='edit_co_mapping()'>Edit CO Mapping</span>
                             <?php
                             } else {
                                 echo "<b><font color='#0099FF'>NO DO : $no_do Sudah Approve I & II</font></b>";
@@ -334,17 +336,38 @@ while (list(
             </div>
         </table>
     </form>
+
+    <form id="alasan_edit" action="fob_receiving_input_data.php" style="display:none" method="POST">
+        <table align="center" class="table table-bordered">
+            <div id="alasan_batal" style="display:none">
+                <tr>
+                    <td align="center" width="100">NO RECEIVING / DO QC</td>
+                    <td align="center" width="2">:</td>
+                    <td align="center" width="150">
+                        <input width="150" type="text" id="no_do" name="no_do" class="form-control" value="<?php echo $id_suratjalan; ?>" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" width="100">NO CO Mapping</td>
+                    <td align="center" width="2">:</td>
+                    <td align="center" width="150">
+                        <input width="150" type="text" id="no_co_m" name="no_co_m" class="form-control" value="<?php echo $co_mapping; ?>">
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td align="center">
+                        <button type="submit" name="edit_co" id="edit_co" class="btn btn-danger btn-block">Edit CO</button>
+                    </td>
+                </tr>
+            </div>
+        </table>
+    </form>
     </div>
 
     <script src="..js/jquery.js"></script>
     <script>
-        function rekap_do_qc_batal() {
-            var x = document.getElementById("alasan_batal");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
+       
     </script>
     <?php include_once "footer.php"; ?>

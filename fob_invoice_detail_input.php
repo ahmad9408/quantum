@@ -122,10 +122,10 @@ include_once "clsaddrow.php";
         </tr>
         <tr>
           <td style="width:100px;">No Faktur Pajak</td>
-          <td colspan="2" type="text" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10"  readonly onDblClick="tampil_edit('<?php echo $faktur ?>')">&nbsp;&nbsp;&nbsp;<?php echo $faktur; ?>
-          <input type="hidden" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10" class="form-control" readonly />
+          <td colspan="2" type="text" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10" readonly onDblClick="tampil_edit('<?php echo $faktur ?>')">&nbsp;&nbsp;&nbsp;<?php echo $faktur; ?>
+            <input type="hidden" name="fkp" id="fkp" value="<?php echo $faktur; ?>" style="font-size: 8pt;width:300px;" size="10" class="form-control" readonly />
           </td>
-        </tr>             
+        </tr>
         <tr>
           <td></td>
           <td><a href="fob_invoice.php"><input type="button" class="btn btn-info" value="Kembali" style="height:30px;"></a></td>
@@ -191,10 +191,10 @@ include_once "clsaddrow.php";
           <input type="text" name="tot_harga<?php echo $i; ?>" id="tot_harga<?php echo $i; ?>" class="form-control" readonly />
         </td>
         <td>
-          <input type="text" name="diskon<?php echo $i; ?>" id="diskon<?php echo $i; ?>" class="form-control" onkeypress="get_diskon('<?php echo $i; ?>')"/>
+          <input type="text" name="diskon<?php echo $i; ?>" id="diskon<?php echo $i; ?>" class="form-control" onkeypress="get_diskon('<?php echo $i; ?>')" />
         </td>
         <td>
-          <input type="text" name="diskon_nilai<?php echo $i; ?>" id="diskon_nilai<?php echo $i; ?>" class="form-control" onkeydown="get_diskon_nilai('<?php echo $i; ?>')"/>
+          <input type="text" name="diskon_nilai<?php echo $i; ?>" id="diskon_nilai<?php echo $i; ?>" class="form-control" onkeydown="get_diskon_nilai('<?php echo $i; ?>')" />
         </td>
         <td>
           <input type="text" name="tot_harusbayar<?php echo $i; ?>" id="tot_harusbayar<?php echo $i; ?>" class="form-control" readonly />

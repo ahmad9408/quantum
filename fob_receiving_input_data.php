@@ -20,6 +20,7 @@ $dc = new DateControl();
 @$sj = $_POST['sj'];
 @$ket = $_POST['ket'];
 @$counter = $_POST['counter'];
+@$co_map = $_POST['cm'];
 $datetime = date('Y-m-d h:i:s');
 
 
@@ -180,7 +181,6 @@ if ($jenis == 'get_barcode') {
         //         , SUM(fcd.ppn)
         //         , SUM(fcd.subtotal)
         //         , fcd.total_harga_jual
-
         //         FROM
         //         fob_receiving AS fc
         //         LEFT JOIN fob_receiving_detail AS fcd
@@ -375,14 +375,81 @@ if ($jenis == 'get_barcode') {
   $c = "COMMIT;";
   $qc = mysql_query($c);
 
-
-
-
   echo "
   <script>
       alert ('Berhasil !');
       window.location = 'fob_receiving.php';
   </script>" . $sql . "<br>" . $sql2;
+
+} else if (isset($_POST["edit_co"])) {
+  
+  $todayTime = date('Y-m-d H:i:s');
+  $no_do = $_POST['no_do'];
+  $co_map = $_POST['no_co_m'];
+  
+  $q = "SET autocommit = 0;";
+  $qq = mysql_query($q);
+
+  $q2 = "START TRANSACTION;";
+  $qq2 = mysql_query($q);
+
+  $up = "UPDATE fob_receiving SET 
+  co_mapping='$co_map'
+  where id_suratjalan='$no_do'";
+
+  $qup = mysql_query($up) or die($up);
+
+  $up = "UPDATE fob_receiving_detail SET 
+  co_mapping='$co_map'
+  where id_receiving='$no_do'";
+
+  $qup = mysql_query($up) or die($up);
+
+  $c = "COMMIT;";
+  $qc = mysql_query($c);
+
+  $sup = "SELECT harga_makloon from job_gelaran where no_co_mapping='$co_map'";
+  $qsup = mysql_query($sup) or die('error query get harga makloon');
+  list($harga_satuan) = mysql_fetch_array($qsup);
+
+  $q = "SET autocommit = 0;";
+  $qq = mysql_query($q);
+
+  $q2 = "START TRANSACTION;";
+  $qq2 = mysql_query($q);
+
+  $sql3 = "UPDATE fob_receiving_detail SET harga='$harga_satuan', ppn=harga*qty*0.11, subtotal=harga*qty+ppn WHERE id_receiving='$no_do' AND co_mapping='$co_map'";
+
+  $query3 = mysql_query($sql3);
+
+  $c = "COMMIT;";
+  $qc = mysql_query($c);
+
+  $sup = "SELECT SUM(qty), harga*SUM(qty), SUM(ppn), SUM(subtotal) FROM fob_receiving_detail WHERE id_receiving='$no_do' AND co_mapping='$co_map'";
+  $qsup = mysql_query($sup) or die('error query get harga makloon');
+  list($sum_qty, $sum_harga, $sum_ppn, $sum_subtotal) = mysql_fetch_array($qsup);
+
+  $q = "SET autocommit = 0;";
+  $qq = mysql_query($q);
+
+  $q2 = "START TRANSACTION;";
+  $qq2 = mysql_query($q);
+
+  $sql3 = "UPDATE fob_receiving SET qty='$sum_qty', subtotal='$sum_harga', ppn='$sum_ppn', total_harga='$sum_subtotal' WHERE id_suratjalan='$no_do' AND co_mapping='$co_map'";
+
+  $query3 = mysql_query($sql3);
+
+  $c = "COMMIT;";
+  $qc = mysql_query($c);
+
+
+  echo "
+  <script>
+      alert ('Berhasil !');
+      window.location = 'fob_receiving_detail.php?id_suratjalan=" . $no_do . "';
+  </script>" . $sql . "<br>" . $sql2;
+
+  die();
 } else { //get Total Jual
 
   echo "

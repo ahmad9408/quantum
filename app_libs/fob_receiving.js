@@ -222,6 +222,7 @@ $(function () {
    });
 });
 
+   
 
 $(document).ready(function(){
  		
@@ -233,7 +234,7 @@ function activateAutoCompleteAll(){
 
 activateAutoComplete($('#pabrik'));		
 
-} v
+}
 
 // function deactivateAutoComplete(component){
 //    component.chosen("destroy");	
@@ -244,3 +245,21 @@ component.chosen({});
 
 
 }	
+
+function rekap_do_qc_batal() {
+   var x = document.getElementById("alasan_batal");
+   if (x.style.display === "none") {
+       x.style.display = "block";
+   } else {
+       x.style.display = "none";
+   }
+}
+
+function edit_co_mapping() {
+   var x = document.getElementById("alasan_edit");
+   if (x.style.display === "none") {
+       x.style.display = "block";
+   } else {
+       x.style.display = "none";
+   }
+}
