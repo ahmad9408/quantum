@@ -101,7 +101,9 @@ if (empty($txtTable)) {
 @$jenis_pabrik = $_POST['jenis_pabrik'];
 
 
-if ($jenis_pabrik <> '') {
+if ($jenis_pabrik == '') {
+	$filter_pabrik = " AND p.id_group NOT LIKE 0";
+}else{
 	$filter_pabrik = " AND p.id_group='$jenis_pabrik' ";
 }
 

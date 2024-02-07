@@ -355,6 +355,32 @@ if ($jenis == 'get_barcode') {
   echo "Berhasil !";
 
   die();
+} else if ($jenis == 'approve2_rj') {
+
+  $sql = "SELECT approve2 FROM fob_receiving WHERE id_suratjalan='$sj'";
+  $hsl = mysql_query($sql);
+  list($approve) = mysql_fetch_array($hsl);
+  if ($approve == 0) {
+
+    $q = "SET autocommit = 0;";
+    $qq = mysql_query($q);
+
+    $q2 = "START TRANSACTION;";
+    $qq2 = mysql_query($q);
+
+    $sql = "UPDATE fob_receiving SET approve2='1', approve2_by='$username',approve2_date=NOW() WHERE id_suratjalan='$sj'";
+    mysql_query($sql);
+
+    $sql2 = "UPDATE fob_receiving_detail SET status='1' WHERE id_receiving='$sj'";
+    mysql_query($sql2);
+
+    $c = "COMMIT;";
+    $qc = mysql_query($c);
+  }
+
+  echo "Berhasil !";
+
+  die();
 } else if (isset($_POST["batalkan"])) {
   $todayTime = date('Y-m-d H:i:s');
   $no_do = $_POST['no_do'];
@@ -380,13 +406,12 @@ if ($jenis == 'get_barcode') {
       alert ('Berhasil !');
       window.location = 'fob_receiving.php';
   </script>" . $sql . "<br>" . $sql2;
-
 } else if (isset($_POST["edit_co"])) {
-  
+
   $todayTime = date('Y-m-d H:i:s');
   $no_do = $_POST['no_do'];
   $co_map = $_POST['no_co_m'];
-  
+
   $q = "SET autocommit = 0;";
   $qq = mysql_query($q);
 

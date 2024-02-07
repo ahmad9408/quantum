@@ -20,6 +20,7 @@ include("css_group.php");
 if (isset($_REQUEST['hal'])) {
   $tgl1  = $_SESSION['tgl1'];
   $tgl2  = $_SESSION['tgl2'];
+  $tgl_tempo  = $_SESSION['tgl_tempo'];
   $pabrik1 = $_SESSION['pabrik'];
   $data_tampil = $_SESSION['data_tampil'];
 } elseif (isset($_REQUEST['action'])) {
@@ -28,12 +29,15 @@ if (isset($_REQUEST['hal'])) {
   $data_tampil = sanitasi($_POST['data_tampil']);
 
   $_SESSION['pabrik'] = $pabrik1;
+  $_SESSION['tgl_tempo'] = $tgl_tempo;
   $_SESSION['data_tampil'] = $data_tampil;
 
   $tgl1  = $_POST['tgl1'];
   $tgl2  = $_POST['tgl2'];
+  $tgl_tempo  = $_POST['tgl_tempo'];
   $_SESSION['tgl1'] = $tgl1;
   $_SESSION['tgl2'] = $tgl2;
+  $_SESSION['tgl_tempo'] = $tgl_tempo;
 } else {
 
   $data_tampil = 20;
@@ -80,6 +84,12 @@ if ($pabrik1 != "") {
   $pabrik2 = "AND id_supplier = '$pabrik1'";
 } else {
   $pabrik2 = "";
+}
+
+if ($tgl_tempo != "") {
+  $tgl_tempo1 = "AND tgl_harus_bayar = '$tgl_tempo'";
+} else {
+  $tgl_tempo1 = "";
 }
 
 if ($status_approve1 == 0) {
@@ -145,6 +155,20 @@ if ($status_approve1 == 0) {
           <input class="form-control" type="text" name="tgl2" id="tgl2" value="<?php echo $tgl2; ?>" style="font-size: 8pt;width:100px;" size="10" />
         </td>
       </tr>
+      <td style="width:100px;">Tgl. Jatuh Tempo</td>
+        <td width="5">
+          <script language="JavaScript">
+            new tcal({
+              // form name
+              'formname': 'f1',
+              // input name
+              'controlname': 'tgl_tempo'
+            });
+          </script>
+        </td>
+        <td width="50">
+          <input class="form-control" type="text" name="tgl_tempo" id="tgl_tempo" value="<?php echo $tgl_tempo; ?>" style="font-size: 8pt;width:100px;" size="10" />
+        </td>
       <tr>
         <td>Supplier</td>
         <td colspan="4">
@@ -234,7 +258,7 @@ $sql = "SELECT SQL_CALC_FOUND_ROWS
                 fob_invoice AS i
                 LEFT JOIN pabrik AS p
                 ON (i.id_supplier = p.id)
-                WHERE i.tanggal BETWEEN '$tgl1' AND '$tgl2' $pabrik2
+                WHERE i.tanggal BETWEEN '$tgl1' AND '$tgl2' $tgl_tempo1 $pabrik2
                 GROUP BY i.id_invoice
                 ORDER BY i.updatedate DESC " . " limit " . ($page * $jmlHal) . "," . $jmlHal . '; -- fob_invoice.php sql1';
 

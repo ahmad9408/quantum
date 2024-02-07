@@ -5,9 +5,22 @@ $proses	= $_POST['proses'];
 if($proses=="ubah_rm_terpakai"){
 	$nilai		= $_POST['nilai'];
 	$no_co		= $_POST['no_co'];
+
+	$q = "SET autocommit = 0;";
+	$qq = mysql_query($q);
+
+	$q2 = "START TRANSACTION;";
+	$qq2 = mysql_query($q);
+
 	 $sql 	= "UPDATE job_cutting_rm_terpakai SET rm_terpakai='$nilai' WHERE no_co='$no_co'";
 	 $res 	= mysql_query($sql)or die($sql);
-	 echo "berhasil";die;
+
+	 $c = "COMMIT;";
+	 $qc = mysql_query($c);
+
+	 echo "berhasil";
+	 die;
+
 } else{
 	$id_barang=$_POST['id_barang'];
 	$no_co=$_POST['no_co'];
@@ -21,12 +34,22 @@ if($proses=="ubah_rm_terpakai"){
 		// $sql="update job_cutting_detail set qty=(select sum(qty) from job_cutting_ikatan where kd_produk='$id_barang' and no_co='$no_co') where no_co='$no_co' and kd_produk='$id_barang'";
 		// $res=mysql_query($sql)or die($sql);
 
+		$q = "SET autocommit = 0;";
+		$qq = mysql_query($q);
+  
+		$q2 = "START TRANSACTION;";
+		$qq2 = mysql_query($q);
+
 		$sql="update job_cutting_detail set qty='$qty' where no_co='$no_co' and kd_produk='$id_barang'";
 		$res=mysql_query($sql)or die($sql);
 		
 		$sql="UPDATE job_cutting SET totalqty=(SELECT SUM(qty) FROM job_cutting_detail WHERE no_co='$no_co') WHERE no_co='$no_co'";
 		$res=mysql_query($sql)or die($sql);
 		echo "berhasil";
+
+		$c = "COMMIT;";
+		$qc = mysql_query($c);
+	
 	// }
 }  
 ?>
