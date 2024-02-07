@@ -207,6 +207,28 @@ function approve2(id_suratjalan){
 
 }
 
+function approve2_rj(id_suratjalan){
+
+   $.ajax({
+       url: "fob_receiving_input_data.php",
+       type: "POST",
+       cache: false,
+       dataType: 'text',
+       data: {
+           j: 'approve2_rj',
+           sj: id_suratjalan
+       },
+       success: function (data) {
+           alert(data);
+           if (data.trim() == 'Berhasil !') {
+            window.location = 'fob_receiving.php';
+           }
+
+       } // END SUCSESS
+   }); // end ajax 
+
+}
+
 
 $(document).ready(function () {
 	$(".detail_baris").hide();

@@ -282,20 +282,22 @@ while (list(
                         <td align="left">
                             <?php
                             if ($approve2 != '1') {
-                            ?><input type="button" value="Approve II" onclick="approve2('<?php echo $id_suratjalan ?>')">
+                            ?>
+                                <span class='btn btn-success' onclick="approve2('<?php echo $id_suratjalan ?>')">Approve II</span>
+
                             <?php
                             } else {
                                 echo "<b>Approved II By [<font color='#0099FF'>$approve2_by</font>]</b>";
                             }
                             ?>
                             &nbsp;&nbsp;
-                            <input type="button" value="Kembali" onclick="window.location='fob_receiving.php?>';">
+                            <span class='btn btn-primary' onclick="window.location='fob_receiving.php?>';">Kembali</span>
                         </td>
                     <tr>
                         <td>&nbsp;&nbsp;</td>
                     </tr>
                     <tr>
-                        <td align="center" colspan="3">
+                        <td align="center" colspan="2">
                             <?php
                             if (($approve1 != '0') && ($approve2 != '1')) {
                             ?><span class='btn btn-danger' onclick='rekap_do_qc_batal()'>Batalkan DO</span>&nbsp;&nbsp;<span class='btn btn-danger' onclick='edit_co_mapping()'>Edit CO Mapping</span>
@@ -305,6 +307,23 @@ while (list(
                             }
                             ?>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="2">
+                            <?php
+                            if ($approve2 != '1') {
+                            ?>
+                                <span class='btn btn-warning' onclick="approve2_rj('<?php echo $id_suratjalan ?>')">Approve II Rumah Jahit</span>
+
+                            <?php
+                            }
+                            ?>
+
+                        </td>
+
                     </tr>
                     <tr>
                         <td>&nbsp;&nbsp;</td>
@@ -368,6 +387,6 @@ while (list(
 
     <script src="..js/jquery.js"></script>
     <script>
-       
+
     </script>
     <?php include_once "footer.php"; ?>
