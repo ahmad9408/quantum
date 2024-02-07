@@ -118,7 +118,7 @@ if (mysql_affected_rows($db) < 1) { ?> <script language="javascript">
 	?>
 		<script language="javascript">
 			alert("PPIC gagal di approve, Silakan hubungi Technical Support Anda!");
-			window.location = "job_gelaran_list_v3.php?no_po=<?php echo $no_po; ?>";
+			window.location = "job_gelaran_approving_v2.php?no_po=<?php echo $no_po; ?>";
 		</script>
 	<?php
 				}
