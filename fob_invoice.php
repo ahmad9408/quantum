@@ -87,7 +87,7 @@ if ($pabrik1 != "") {
 }
 
 if ($tgl_tempo != "") {
-  $tgl_tempo1 = "AND tgl_harus_bayar = '$tgl_tempo'";
+  $tgl_tempo1 = "AND i.tanggal = '$tgl_tempo'";
 } else {
   $tgl_tempo1 = "";
 }
@@ -126,7 +126,7 @@ if ($status_approve1 == 0) {
   <fieldset id="fieldsearch">
     <table class="table table-bordered">
       <tr>
-        <td style="width:100px;">Tgl. Invoice Dari</td>
+        <td style="width:100px;">Periode Jatuh Tempo</td>
         <td width="5">
           <script language="JavaScript">
             new tcal({
@@ -155,7 +155,7 @@ if ($status_approve1 == 0) {
           <input class="form-control" type="text" name="tgl2" id="tgl2" value="<?php echo $tgl2; ?>" style="font-size: 8pt;width:100px;" size="10" />
         </td>
       </tr>
-      <td style="width:100px;">Tgl. Jatuh Tempo</td>
+      <td style="width:100px;">Tgl. Invoice</td>
         <td width="5">
           <script language="JavaScript">
             new tcal({
@@ -258,7 +258,7 @@ $sql = "SELECT SQL_CALC_FOUND_ROWS
                 fob_invoice AS i
                 LEFT JOIN pabrik AS p
                 ON (i.id_supplier = p.id)
-                WHERE i.tanggal BETWEEN '$tgl1' AND '$tgl2' $tgl_tempo1 $pabrik2
+                WHERE i.tgl_harus_bayar BETWEEN '$tgl1' AND '$tgl2' $tgl_tempo1 $pabrik2
                 GROUP BY i.id_invoice
                 ORDER BY i.updatedate DESC " . " limit " . ($page * $jmlHal) . "," . $jmlHal . '; -- fob_invoice.php sql1';
 

@@ -17,12 +17,12 @@ $dc = new DateControl();
 @$supplier = $_POST['supplier'];
 @$tgldatang = $_POST['tgldatang'];
 @$hargasatuan = $_POST['hargasatuan'];
-@$sj = $_POST['sj'];
+@$sj2 = $_POST['sj'];
 @$ket = $_POST['ket'];
 @$counter = $_POST['counter'];
 @$co_map = $_POST['cm'];
 $datetime = date('Y-m-d h:i:s');
-
+$sj = str_replace(" ", "", $sj2);
 
 
 $isJson = 1;

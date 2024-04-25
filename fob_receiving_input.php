@@ -124,7 +124,7 @@ include_once "clsaddrow.php";
       <tr>
         <td style="width:100px;">No Surat Jalan</td>
         <td>
-          <input type="text" name="sj" id="sj" value="<?php echo $invoice; ?>" size="30" placeholder="Harus di Isi" required />
+          <input type="text" name="sj" id="sj" value="<?php echo $invoice; ?>" size="30" placeholder="Tidak boleh ada Spasi" oninput="validateInput(this)" required />
         </td>
       </tr>
       <tr>

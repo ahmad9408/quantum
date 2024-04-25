@@ -6,25 +6,107 @@ include_once "header_window_content.php" ?>
 		window.opener.document.getElementById(textid).value = id_suratjalan;
 		window.close();
 	}
+
+	$(document).ready(function() {
+
+		activateAutoCompleteAll();
+
+	});
+
+	function activateAutoCompleteAll() {
+
+		activateAutoComplete($('#pabrik'));
+		activateAutoComplete($('#supplier'));
+
+	}
+
+
+	function activateAutoComplete(component) {
+		component.chosen({});
+	}
 </script>
+
+<script language="JavaScript" src="calendar_us.js"></script>
+<link rel="stylesheet" href="calendar.css" />
 <?php
-echo $cari = $_REQUEST[cari];
-$sql_cache = ' SQL_CACHE ';
+
+
+	$_SESSION['cari'] = $cari;
+	$_SESSION['tgl_sj'] = $tgl_sj;
+	$_SESSION['pabrik'] = $pabrik1;
+
+
+	$cari  = $_POST['cari'];
+	$tgl_sj  = $_POST['tgl_sj'];
+	$pabrik1 = $_POST['pabrik'];
+
+if ($pabrik1 != "") {
+	$pabrik2 = "AND id_supplier = '$pabrik1'";
+} else {
+	$pabrik2 = "";
+}
+
 ?>
-<form method="post">
+<form method="POST" name="f1">
 	<table border="0" width="150%">
 		<tr>
-			<td>Pencarian : <input type="text" name="cari" value="<?php echo $cari ?>" size="40" />&nbsp;<input type="submit" name="submit" value="Cari" /></td>
+			<td>Supplier</td>
+			<td colspan="4">
+				<select style="width:300px" name="pabrik" id="pabrik" class="form-control">
+					<option value="">-- All Supplier --</option>
+					<?php
+					$sql = "SELECT $sql_cache id,nama,mk FROM pabrik WHERE `status`=1 AND id_group=2";
+					$hsltemp = mysql_query($sql, $db);
+					while (list($id, $nama) = mysql_fetch_array($hsltemp)) {
+					?>
+						<option value="<?php echo $id; ?>" <?php
+															if ($pabrik1 == $id) {
+																echo "selected";
+															} ?>>
+							<?php
+							echo "$id [$nama]";
+							?>
+						</option>
+					<?php
+					}
+					?>
+				</select>
+			</td>
 		</tr>
-		
 		<tr>
-			<td><sub>Pencarian bisa berdasarkan Nama Pabrik / No. SJ / Deskripsi / Tgl. SJ </sub></td>
+			<td style="width:30px;">Tgl. SJ</td>
+			<td width="5">
+				<script language="JavaScript">
+					new tcal({
+						// form name
+						'formname': 'f1',
+						// input name
+						'controlname': 'tgl_sj'
+					});
+				</script>
+			</td>
+			<td width="50">
+				<input class="form-control" type="text" name="tgl_sj" id="tgl_sj" value="<?php echo $tgl_sj; ?>" style="font-size: 8pt;width:100px;" size="10" />
+			</td>
 		</tr>
+		<tr>
+			<td>No. SJ</td>
+			<td>
+				:
+			</td>
+			<td>
+				<input type="text" name="cari" value="<?php echo $cari ?>" size="40" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3"><input type="submit" name="submit" value="Cari" /></td>
+		</tr>
+
 	</table>
 </form>
 <table border="1" width="100%" style="font-size: 10pt" cellspacing="0" cellpadding="0" class="table_q table_q-striped table_q-hover sortable">
 	<tr class="header_table_q">
-		<td align="center" width="48" bgcolor="#0F74A8"  height="24"><b style="color:white">No</b></td>
+		<td align="center" width="48" bgcolor="#0F74A8" height="24"><b style="color:white">No</b></td>
 		<td align="center" width="48" bgcolor="#0F74A8" height="24"><b style="color:white">No Surat Jalan</b></td>
 		<td align="center" width="150" bgcolor="#0F74A8" height="24"><b style="color:white">Tgl. Surat Jalan</b></td>
 		<td align="center" width="150" bgcolor="#0F74A8" height="24"><b style="color:white">Supplier</b></td>
@@ -54,9 +136,10 @@ $sql_cache = ' SQL_CACHE ';
 					, sisa_bayar
 					, status
 					, approve2
+					, id_supplier
 					FROM
 					fob_receiving
-			   		WHERE id_suratjalan like '%$cari%' AND status='1' AND approve2='1'ORDER BY tgl_datang DESC,id_suratjalan ";
+			   		WHERE id_suratjalan LIKE '%$cari%' AND tgl_datang LIKE '%$tgl_sj%' AND status='1' AND approve2='1' $pabrik2 ORDER BY tgl_datang DESC,id_suratjalan ";
 
 	if ($_SESSION['username'] == 'B120938_ahmad') {
 		echo $sql;
@@ -100,7 +183,7 @@ $sql_cache = ' SQL_CACHE ';
 			<td height="20"><?php echo $nama_supplier; ?></td>
 			<td height="20">&nbsp;<?php echo $keterangan; ?></td>
 			<td height="20">&nbsp;<?php echo $qty; ?></td>
-			<td align="right" width="100" height="20"><?php echo number_format($hargasatuan = $subtotal/$qty, 2, ",", "."); ?></td>
+			<td align="right" width="100" height="20"><?php echo number_format($hargasatuan = $subtotal / $qty, 2, ",", "."); ?></td>
 			<td align="right" width="100" height="20"><?php echo number_format($subtotal, 2, ",", "."); ?></td>
 			<td align="right" width="100" height="20"><?php echo number_format($ppn, 2, ",", "."); ?></td>
 			<td align="right" width="100" height="20"><?php echo number_format($total_harga, 2, ",", "."); ?></td>
@@ -109,7 +192,7 @@ $sql_cache = ' SQL_CACHE ';
 			<td align="right" width="100" height="20"><?php echo number_format($sisa_bayar, 2, ",", "."); ?></td>
 		</tr>
 	<?php
-	
+
 	}
 	?>
 </table>
